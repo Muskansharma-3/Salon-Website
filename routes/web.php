@@ -25,7 +25,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/appointments', [AppointmentController::class, 'store'])->name('appointments.store');
 });
 
-// my appointments
+// my appointments -> 
 
 Route::middleware('auth')->group(function () {
     Route::get('/appointments', [AppointmentController::class, 'index'])->name('appointments.index');
