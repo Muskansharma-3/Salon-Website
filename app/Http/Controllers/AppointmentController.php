@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Appointment;
+use App\Mail\AppointmentNotification;
 
 class AppointmentController extends Controller
 {
@@ -28,8 +30,9 @@ class AppointmentController extends Controller
             'name' => 'required|string|max:255',
             'phone' => ['required', 'regex:/^[0-9]{10}$/'],
             'gender' => 'required|in:male,female,children',
-            'service' => 'required|string|max:255',
-            'price' => 'nullable|integer',
+            'services' => 'required|array|min:1',
+            'services.*' => 'string|max:255',
+            'total_price' => 'required|integer|min:0',
             'date' => 'required|date|after_or_equal:today',
             'time' => [
                 'required',
@@ -55,51 +58,52 @@ class AppointmentController extends Controller
             'name' => $validated['name'],
             'phone' => $validated['phone'],
             'gender' => $validated['gender'],
-            'service' => $validated['service'],
-            'price' => $validated['price'],
+            'services' => implode(', ', $validated['services']),
+            'total_price' => $validated['total_price'],
             'appointment_date' => $validated['date'],
             'appointment_time' => $validated['time'],
         ]);
 
+        // Send booking email to owner
+        Mail::to('owner@example.com')->send(new AppointmentNotification([
+            'subject' => 'New Appointment Booked',
+            'name' => $validated['name'],
+            'phone' => $validated['phone'],
+            'gender' => $validated['gender'],
+            'services' => implode(', ', $validated['services']),
+            'total_price' => $validated['total_price'],
+            'date' => $validated['date'],
+            'time' => $validated['time'],
+        ]));
+
         return redirect()->route('appointments.index')->with('success', 'Appointment booked successfully!');
-
     }
+
     public function index()
-{
-    $appointments = Appointment::where('user_id', Auth::id())->orderBy('appointment_date')->get();
-    return view('appointments.index', compact('appointments'));
-}
+    {
+        $appointments = Appointment::where('user_id', Auth::id())->orderBy('appointment_date')->get();
+        return view('appointments.index', compact('appointments'));
+    }
 
-public function edit(Appointment $appointment)
-{
-    // $this->authorize('update', $appointment);
-    return view('appointments.edit', compact('appointment'));
-}
-public function update(Request $request, Appointment $appointment)
-{
-    // $this->authorize('update', $appointment);
+    public function destroy(Appointment $appointment)
+    {
+        // Store details before deletion
+        $details = [
+            'subject' => 'Appointment Cancelled',
+            'name' => $appointment->name,
+            'phone' => $appointment->phone,
+            'gender' => $appointment->gender,
+            'services' => $appointment->services,
+            'total_price' => $appointment->total_price,
+            'date' => $appointment->appointment_date,
+            'time' => $appointment->appointment_time,
+        ];
 
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'phone' => 'required|digits:10',
-        'gender' => 'required|in:male,female,children',
-        'service' => 'required|string|max:255',
-        'appointment_date' => 'required|date',
-        'appointment_time' => 'required|date_format:H:i',
-    ]);
+        $appointment->delete();
 
-    $appointment->update($request->all());
+        // Send cancellation email to owner
+        Mail::to('owner@example.com')->send(new AppointmentNotification($details));
 
-    return redirect()->route('appointments.index')->with('success', 'Appointment updated successfully!');
-}
-
-public function destroy(Appointment $appointment)
-{
-    // $this->authorize('delete', $appointment);
-    $appointment->delete();
-
-    return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully!');
-}
-
-
+        return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully!');
+    }
 }

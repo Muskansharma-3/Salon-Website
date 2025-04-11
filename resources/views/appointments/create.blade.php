@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Book Appointment - Glamour Salon</title>
+    <title>Book Appointment - BS Unisex Salon</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
@@ -43,7 +43,6 @@
                     <input type="text" name="phone" value="{{ old('phone') }}" class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400" required>
                 </div>
 
-                <!-- Date and Time Grid -->
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-gray-700 mb-1">Date</label>
@@ -60,7 +59,6 @@
                     </div>
                 </div>
 
-                <!-- Gender Selection -->
                 <div class="mt-6">
                     <label class="block text-sm font-semibold text-gray-700 mb-1">Gender</label>
                     <select name="gender" x-model="gender" class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400" required>
@@ -71,29 +69,37 @@
                     </select>
                 </div>
 
-                <!-- Services -->
                 <div x-show="gender" class="mt-6">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Choose a Service</h3>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Choose Services</h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                         <template x-for="service in services[gender]" :key="service.name">
                             <label class="cursor-pointer border border-gray-200 rounded-xl p-4 hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
                                 <img :src="service.image" alt="" class="w-20 h-20 object-cover rounded-full mb-3">
                                 <h4 class="font-semibold text-gray-700" x-text="service.name"></h4>
                                 <p class="text-sm text-indigo-600 font-medium mb-2" x-text="'₹' + service.price"></p>
-                                <input type="radio" name="service" :value="service.name" x-model="selectedService" class="sr-only" required>
-                                <input type="hidden" name="price" :value="services[gender].find(s => s.name === selectedService)?.price">
+                                <input type="checkbox"
+                                       :value="service.name"
+                                       x-model="selectedServices"
+                                       name="services[]"
+                                       class="form-checkbox h-5 w-5 text-indigo-600 rounded focus:ring-indigo-500" />
                             </label>
                         </template>
                     </div>
                 </div>
 
-                <!-- Selected Service Info -->
-                <div x-show="selectedService" class="mt-6 p-4 bg-indigo-50 border-l-4 border-indigo-400 rounded-lg shadow-md transition-all duration-300 ease-in-out">
-                    <h3 class="text-lg font-semibold text-indigo-700 mb-2">Selected Service</h3>
-                    <p class="text-gray-800 text-base" x-text="selectedService"></p>
+                <div x-show="selectedServices.length" class="mt-6 p-4 bg-indigo-50 border-l-4 border-indigo-400 rounded-lg shadow-md transition-all duration-300 ease-in-out">
+                    <h3 class="text-lg font-semibold text-indigo-700 mb-2">Selected Services</h3>
+                    <ul class="list-disc list-inside text-gray-800">
+                        <template x-for="serviceName in selectedServices" :key="serviceName">
+                            <li x-text="serviceName"></li>
+                        </template>
+                    </ul>
+                    <p class="mt-2 font-semibold text-indigo-800">Total Price: ₹<span x-text="totalPrice"></span></p>
                 </div>
 
-                <!-- Submit -->
+                <input type="hidden" name="total_price" x-model="totalPrice">
+
+
                 <div class="pt-4">
                     <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold text-lg transition duration-300">Confirm Appointment</button>
                 </div>
@@ -101,12 +107,11 @@
         </div>
     </div>
 
-    <!-- Alpine.js Logic -->
     <script>
         function appointmentForm() {
             return {
                 gender: '',
-                selectedService: '',
+                selectedServices: [],
                 services: {
                     male: [
                         { name: 'Haircut', price: 200, image: '/images/services/male/haircut.jpg' },
@@ -141,6 +146,12 @@
                         { name: 'Mini Pedicure', price: 180, image: '/images/services/children/pedicure.webp' },
                         { name: 'Fun Nail Art', price: 180, image: '/images/services/children/nail.jpeg' },
                     ]
+                },
+                get totalPrice() {
+                    return this.selectedServices.reduce((total, name) => {
+                        const match = this.services[this.gender].find(s => s.name === name);
+                        return total + (match ? match.price : 0);
+                    }, 0);
                 }
             }
         }

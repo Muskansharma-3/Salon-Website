@@ -14,10 +14,16 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->enum('gender', ['male', 'female', 'children']);
-            $table->string('service');
+            
+            // CHANGED: from string to text to store multiple services
+            $table->text('services');
+
             $table->date('appointment_date');
             $table->time('appointment_time');
-            $table->integer('price')->nullable();
+
+            // CHANGED: renamed `price` to `total_price` for clarity
+            $table->integer('total_price');
+
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

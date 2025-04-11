@@ -12,7 +12,8 @@ class Appointment extends Model
         'name',              
         'phone', 
         'gender',
-        'service',
+        'services',
+        'total_price',
         'appointment_date',
         'appointment_time',
     ];

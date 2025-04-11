@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Register - Glamour Salon</title>
+  <title>Register - BS Unisex Salon</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-[url('/images/salon-bg.jpg')] bg-cover bg-center min-h-screen">
