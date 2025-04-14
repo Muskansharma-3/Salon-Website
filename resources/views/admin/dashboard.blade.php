@@ -1,59 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Admin Dashboard - Glamour Salon</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen">
+@extends('layouts.admin')
 
-  @include('components.navbar')
+@section('content')
+<div class="max-w-6xl mx-auto py-10">
+    <!-- Welcome Header -->
+    <h1 class="text-3xl font-bold text-indigo-700 mb-6 text-center">Welcome, Admin 👋</h1>
 
-  <div class="p-8">
-    <h2 class="text-2xl font-bold text-indigo-600 mb-6 text-center">Admin Dashboard - All Appointments</h2>
+    <!-- Navigation Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Appointments Card -->
+        <a href="{{ route('admin.appointments.index') }}" class="block bg-indigo-600 text-white shadow-lg rounded-lg p-6 hover:shadow-xl transition transform hover:scale-105">
+            <div class="flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h18M3 12h18m-7 6h7" />
+                </svg>
+                <h2 class="text-xl font-semibold">Manage Appointments</h2>
+                <p class="text-sm mt-2">View, manage, and cancel customer appointments.</p>
+            </div>
+        </a>
 
-    @if(session('success'))
-      <div class="bg-green-100 text-green-700 p-3 rounded mb-4 max-w-4xl mx-auto text-center">
-        {{ session('success') }}
-      </div>
-    @endif
-
-    <div class="overflow-x-auto max-w-6xl mx-auto">
-      <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow">
-        <thead class="bg-indigo-600 text-white">
-          <tr>
-            <th class="py-3 px-4 text-left">Name</th>
-            <th class="py-3 px-4 text-left">Phone</th>
-            <th class="py-3 px-4 text-left">Gender</th>
-            <th class="py-3 px-4 text-left">Services</th>
-            <th class="py-3 px-4 text-left">Date</th>
-            <th class="py-3 px-4 text-left">Time</th>
-            <th class="py-3 px-4 text-left">Total Price</th>
-            <th class="py-3 px-4 text-left">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach ($appointments as $appointment)
-            <tr class="border-b border-gray-200 hover:bg-gray-50">
-              <td class="py-3 px-4">{{ $appointment->name }}</td>
-              <td class="py-3 px-4">{{ $appointment->phone }}</td>
-              <td class="py-3 px-4">{{ $appointment->gender }}</td>
-              <td class="py-3 px-4">{{ $appointment->services }}</td>
-              <td class="py-3 px-4">{{ $appointment->appointment_date }}</td>
-              <td class="py-3 px-4">{{ $appointment->appointment_time }}</td>
-              <td class="py-3 px-4">₹{{ $appointment->total_price }}</td>
-              <td class="py-3 px-4">
-                <form action="{{ route('admin.deleteAppointment', $appointment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this appointment?');">
-                  @csrf
-                  @method('DELETE')
-                  <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Cancel Appointment</button>
-                </form>
-              </td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
+        <!-- Products Card -->
+        <a href="{{ route('admin.products.index') }}" class="block bg-indigo-600 text-white shadow-lg rounded-lg p-6 hover:shadow-xl transition transform hover:scale-105">
+            <div class="flex flex-col items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m7-7H5" />
+                </svg>
+                <h2 class="text-xl font-semibold">Manage Products</h2>
+                <p class="text-sm mt-2">Add, edit, or remove salon products.</p>
+            </div>
+        </a>
     </div>
-  </div>
-</body>
-</html>
+
+</div>
+@endsection

@@ -7,7 +7,7 @@
 </head>
 <body class="bg-[url('/images/salon-bg.jpg')] bg-cover bg-center min-h-screen">
 
-  @include('components.navbar')
+  @include('components.admin-navbar')
 
   <div class="flex items-center justify-center min-h-screen">
     <div class="bg-white bg-opacity-90 p-8 rounded-xl shadow-lg w-full max-w-md">

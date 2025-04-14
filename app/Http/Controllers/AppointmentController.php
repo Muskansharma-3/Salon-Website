@@ -65,7 +65,7 @@ class AppointmentController extends Controller
         ]);
 
         // Send booking email to owner
-        Mail::to('owner@example.com')->send(new AppointmentNotification([
+        Mail::to('muskansharma0203@gmail.com')->send(new AppointmentNotification([
             'subject' => 'New Appointment Booked',
             'name' => $validated['name'],
             'phone' => $validated['phone'],
@@ -102,7 +102,7 @@ class AppointmentController extends Controller
         $appointment->delete();
 
         // Send cancellation email to owner
-        Mail::to('owner@example.com')->send(new AppointmentNotification($details));
+        Mail::to('muskansharma0203@gmail.com')->send(new AppointmentNotification($details));
 
         return redirect()->route('appointments.index')->with('success', 'Appointment deleted successfully!');
     }

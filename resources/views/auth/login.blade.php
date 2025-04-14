@@ -11,7 +11,7 @@
 
   <div class="flex items-center justify-center min-h-screen">
     <div class="bg-white bg-opacity-90 p-8 rounded-xl shadow-lg w-full max-w-md">
-      <h2 class="text-2xl font-bold text-center text-indigo-600 mb-6">Welcome to Glamour Salon 💼</h2>
+      <h2 class="text-2xl font-bold text-center text-indigo-600 mb-6">Welcome to BS Unisex Salon 💼</h2>
 
       @if(session('error'))
         <div class="text-red-500 text-sm mb-4">{{ session('error') }}</div>

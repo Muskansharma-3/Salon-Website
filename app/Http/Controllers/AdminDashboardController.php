@@ -14,6 +14,14 @@ class AdminDashboardController extends Controller
         return view('admin.dashboard', compact('appointments'));
     }
 
+public function showAppointments()
+{
+    // Fetch all appointments or any specific filtering
+    $appointments = Appointment::all(); // Or add specific logic to fetch necessary data
+    return view('admin.appointments.index', compact('appointments')); // Return the view with the appointments
+}
+
+
     public function destroy(Appointment $appointment)
     {
         $appointment->delete();
