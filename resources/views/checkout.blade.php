@@ -20,12 +20,13 @@
             <span>₹{{ $total }}</span>
         </div>
 
-        <form action="#" method="POST" class="mt-8">
-            @csrf
-            <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded hover:bg-indigo-700">
-                Place Order (Dummy)
-            </button>
-        </form>
+        <form action="{{ route('order.place') }}" method="POST">
+    @csrf
+    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+        Place Order
+    </button>
+</form>
+
     </div>
 </div>
 @endsection
