@@ -1,4 +1,3 @@
-{{-- resources/views/home.blade.php --}}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +8,25 @@
 <body class="bg-cover bg-center h-screen" style="background-image: url('/images/2.jpg');">
 
     @include('components.navbar')
+
+    {{-- ✅ Success Message Alert --}}
+    @if(session('success'))
+        <div id="success-message" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 max-w-xl mx-auto text-center transition-opacity duration-1000">
+            {{ session('success') }}
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    const msg = document.getElementById('success-message');
+                    if (msg) {
+                        msg.style.opacity = '0';
+                        setTimeout(() => msg.remove(), 1000);
+                    }
+                }, 3000);
+            });
+        </script>
+    @endif
 
     <div class="flex flex-col justify-center items-center text-center h-full px-6 relative z-10">
         <div class="bg-white/20 backdrop-blur-md p-10 rounded-3xl shadow-2xl border border-gray-300/30 max-w-3xl animate-fade-in-down">
