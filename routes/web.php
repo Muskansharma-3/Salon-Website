@@ -85,6 +85,12 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.in
 Route::patch('/cart/{id}/increment', [CartController::class, 'increment'])->name('cart.increment');
 Route::patch('/cart/{id}/decrement', [CartController::class, 'decrement'])->name('cart.decrement');
 
+Route::post('/place-order', function () {
+    // You can add actual order saving logic here later if needed.
+
+    return redirect()->route('home')->with('success', 'Your order has been placed successfully!');
+})->name('order.place');
+
 
 
 
